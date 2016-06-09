@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>blinky</TargetName>
+      <TargetName>blinky_rtos</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
@@ -48,7 +48,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\output\</OutputDirectory>
-          <OutputName>blinky</OutputName>
+          <OutputName>blinky_rtos</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -346,7 +346,7 @@
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
             <VariousControls>
-              <MiscControls>--cpreproc --cpreproc_opts='-D__BLINKY'</MiscControls>
+              <MiscControls>--cpreproc --cpreproc_opts='-D__BLINKY_RTOS'</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
               <IncludePath>.;..\shared</IncludePath>
@@ -399,6 +399,11 @@
               <FileName>system_stm32f4xx.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\system_stm32f4xx.c</FilePath>
+            </File>
+            <File>
+              <FileName>event.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\event.c</FilePath>
             </File>
           </Files>
         </Group>

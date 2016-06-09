@@ -1,19 +1,40 @@
 #include <stdio.h>
+#include "cmsis_os.h"
 #include "stm32f4xx.h"
+#include "event.h"
 #include "leds.h"
 #include "uart.h"
 
-static uint32_t blink_counter;
+static void blink_event(void);
+static void blink_timer_handler(void const * p_context);
+static osTimerId blink_timer_id;
+osTimerDef(blink_timer, blink_timer_handler);
 
-// Initialize the blink data structures.
-void blink_init(void)
+static uint32_t blink_counter = 0;
+
+// LED blink timer callback handler.  This is called from the
+// context of the timer thread.
+static void blink_timer_handler(void const *p_context)
 {
-  // Simple initialization of the blink counter.
-  blink_counter = 0;
+  // Schedule a heart beat event.
+  event_schedule(blink_event);
 }
 
-// Process one iteration of the LED blinking.
-void blink_process(void)
+// Initialize the blink timer.
+void blink_init(void)
+{
+  // Initialize the blink counter.
+  blink_counter = 0;
+
+  // Create the blink timer.
+  blink_timer_id = osTimerCreate(osTimer(blink_timer), osTimerPeriodic, NULL);
+
+  // Start the blink timer running with a period of 250 ms.
+  osTimerStart(blink_timer_id, 250);
+}
+
+// A blink event occured.
+void blink_event(void)
 {
   // Update the blink counter.
   ++blink_counter;
@@ -34,23 +55,20 @@ int main(void)
   // Update the system clocks.
   SystemCoreClockUpdate();
 
+  // Event initialization.
+  event_init();
+
   // LED initialization.
   leds_init();
 
   // Debugging UART initialization.
   uart_debug_init();
 
-  // Loop forever.
-  for (;;)
-  {
-    int i;
+  // Initialize the LED blinker.
+  blink_init();
 
-    // Waste some time counting.
-    for (i = 0; i < 8000000; ++i);
-
-    // Blink the LEDs.
-    blink_process();
-  }
+  // Process events.
+  event_loop();
 }
 
 #ifdef  USE_FULL_ASSERT
