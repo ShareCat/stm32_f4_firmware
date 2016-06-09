@@ -41,7 +41,7 @@ int main(void)
   uart_debug_init();
 
   // Loop forever.
-  for (;;)
+  while (1)
   {
     int i;
 
