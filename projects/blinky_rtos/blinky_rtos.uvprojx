@@ -335,7 +335,7 @@
               <MiscControls>--diag_suppress=3731</MiscControls>
               <Define>STM32F40_41xxx USE_STDPERIPH_DRIVER __CORTEX_M4F __FPU_PRESENT __CMSIS_RTOS</Define>
               <Undefine></Undefine>
-              <IncludePath>.;..\shared;..\..\libraries\CMSIS\Include;..\..\libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\libraries\rtx-v4.79\INC;..\..\libraries\rtx-v4.79\SRC;..\..\libraries\STM32F4xx_StdPeriph_Driver\inc</IncludePath>
+              <IncludePath>.;..\..\libraries\CMSIS\Include;..\..\libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\libraries\RTX-v4.79\INC;..\..\libraries\RTX-v4.79\SRC;..\..\libraries\STM32F4xx_StdPeriph_Driver\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -353,7 +353,7 @@
               <MiscControls>--cpreproc --cpreproc_opts='-D__BLINKY_RTOS'</MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.;..\shared</IncludePath>
+              <IncludePath>.</IncludePath>
             </VariousControls>
           </Aads>
           <LDads>
@@ -472,7 +472,7 @@
             <File>
               <FileName>startup_stm32f40_41xxx.s</FileName>
               <FileType>2</FileType>
-              <FilePath>.\startup_stm32f40_41xxx.s</FilePath>
+              <FilePath>..\..\libraries\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f40_41xxx.s</FilePath>
             </File>
           </Files>
         </Group>
