@@ -266,13 +266,19 @@ static int telnet_write(char *str, int size, bool flush)
 
 static void telnet_shell(int s) 
 {
-  int off;
+  int optval;
 
   // TCP_NODELAY is used to disable the Nagle buffering algorithm. It 
   // should only be set for applications such as telnet that send frequent
   // small bursts of information without getting an immediate response,
   // where timely delivery of data is required.
-  off = 0; setsockopt(s, IPPROTO_TCP, TCP_NODELAY, (char *) &off, sizeof(off));
+  optval = 0; setsockopt(s, IPPROTO_TCP, TCP_NODELAY, &optval, sizeof(optval));
+
+  // Configure keep alive on the socket to detect when a connection goes idle.
+  optval = 1; setsockopt(s, SOL_SOCKET, SO_KEEPALIVE, &optval, sizeof(optval));
+  optval = 4; setsockopt(s, IPPROTO_TCP, TCP_KEEPCNT, &optval, sizeof(optval));
+  optval = 30; setsockopt(s, IPPROTO_TCP, TCP_KEEPIDLE, &optval, sizeof(optval));
+  optval = 5; setsockopt(s, IPPROTO_TCP, TCP_KEEPINTVL, &optval, sizeof(optval));
 
   // Initialize terminal state.
   memset(ts, 0, sizeof(struct termstate));
