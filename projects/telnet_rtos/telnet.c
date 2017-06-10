@@ -369,7 +369,7 @@ void telnet_printf(const char *fmt, ...)
   unsigned int j;
   unsigned int w;
   unsigned long v;
-  __va_list arp;
+  va_list arp;
 
   va_start (arp, fmt);
   for (;;)

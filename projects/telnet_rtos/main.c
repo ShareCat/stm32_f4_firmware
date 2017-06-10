@@ -62,6 +62,8 @@ int main(void)
 
   // Process events.
   event_loop();
+
+  return 0;
 }
 
 void LCD_Init(void)

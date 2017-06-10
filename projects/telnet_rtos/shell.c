@@ -50,13 +50,13 @@ static bool shell_help(int argc, char **argv)
 static int shell_parse(char **str, char **word)
 {
   // Skip leading spaces.
-  while (**str && isspace(**str)) (*str)++;
+  while (**str && isspace((unsigned char) **str)) (*str)++;
 
   // Set the word.
   *word = *str;
 
   // Skip non-space characters.
-  while (**str && !isspace(**str)) (*str)++;
+  while (**str && !isspace((unsigned char) **str)) (*str)++;
 
   // Null terminate the word.
   if (**str) *(*str)++ = 0;
