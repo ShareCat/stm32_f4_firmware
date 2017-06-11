@@ -25,8 +25,6 @@ void blink_process(void)
 
 int main(void)
 {
-  int count = 0;
-
   // At this stage the microcontroller clock setting is already configured, 
   // this is done through SystemInit() function which is called from startup
   // file (startup_stm32f40_41xxx.s) before to branch to application main. 
@@ -49,8 +47,6 @@ int main(void)
 
     // Waste some time counting.
     for (i = 0; i < 8000000; ++i);
-
-    printf("%d\n", count++);
 
     // Blink the LEDs.
     blink_process();
