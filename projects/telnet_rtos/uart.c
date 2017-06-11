@@ -222,6 +222,8 @@ void uart_init(void)
   USART_ITConfig(USART6, USART_IT_RXNE, ENABLE);
 }
 
+#if defined (__CC_ARM)
+
 // Send standard output to the USART.
 int fputc(int ch, FILE *f)
 {
@@ -258,3 +260,69 @@ int fgetc(FILE *f)
   return (int) event.value.p;
 }
 
+#elif defined (__GNUC__)
+
+// Send standard output to the USART.
+int _write(int fd, const void *buf, size_t count)
+{
+  (void) fd;
+  int write_count = 0;
+  uint8_t *bufptr = (uint8_t *) buf;
+
+  // Process each character in the buffer.
+  while (count--)
+  {
+    // Next character in the buffer.
+    uint8_t ch = *(bufptr++);
+
+    // Send a CRLF for each LF.
+    if (ch == '\n')
+    {
+      // Write the CR into the send queue.
+      osMessagePut(usart_send_queue, (uint32_t) '\r', osWaitForever);
+
+      // Enable the transmit empty flag.
+      USART_ITConfig(USART6, USART_IT_TXE, ENABLE);
+
+      // Keep track of the each character written.
+      ++write_count;
+    }
+
+    // Write the byte to send into the send queue.
+    osMessagePut(usart_send_queue, (uint32_t) ch, osWaitForever);
+
+    // Enable the transmit empty flag.
+    USART_ITConfig(USART6, USART_IT_TXE, ENABLE);
+
+    // Keep track of the each character written.
+    ++write_count;
+  }
+
+  return write_count;
+}
+
+// Receive standard input from the USART.
+int _read(int fd, const void *buf, size_t count)
+{
+  (void) fd;
+  osEvent event;
+  bool done = false;
+  uint8_t *bufptr = (uint8_t *) buf;
+
+  // Keep going until we receive a character.
+  while (!done)
+  {
+    // Wait to get the next character from the receive queue.
+    event = osMessageGet(usart_recv_queue, osWaitForever);
+
+    // Did we actually receive a character?
+    done = (event.status == osEventMessage) ? true : false;
+  }
+
+  // Return the character received.
+  *bufptr = (int) event.value.p;
+
+  return 1;
+}
+
+#endif

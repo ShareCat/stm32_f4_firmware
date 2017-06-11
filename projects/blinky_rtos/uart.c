@@ -55,6 +55,8 @@ void uart_debug_init(void)
   USART_Cmd(USART6, ENABLE);
 }
 
+#if defined (__CC_ARM)
+
 // Retargets the C library printf function to the USART.
 int fputc(int ch, FILE *f)
 {
@@ -82,3 +84,45 @@ int fgetc(FILE *f)
   return 0;
 }
 
+#elif defined (__GNUC__)
+
+// Retargets the C library printf function to the USART.
+int _write(int fd, const void *buf, size_t count)
+{
+  (void) fd;
+  int write_count = 0;
+  uint8_t *bufptr = (char *) buf;
+
+  // Process each character in the buffer.
+  while (count--)
+  {
+    // Next character in the buffer.
+    uint8_t ch = *(bufptr++);
+
+    // Send a CRLF for each LF.
+    if (ch == '\n')
+    {
+      // Send the CR character.
+      USART_SendData(USART6, (uint8_t) '\r');
+
+      // Keep track of the each character written.
+      ++write_count;
+
+      // Loop until the end of transmission.
+      while (USART_GetFlagStatus(USART6, USART_FLAG_TC) == RESET);
+    }
+
+    // Send the character.
+    USART_SendData(USART6, (uint8_t) ch);
+
+    // Keep track of the each character written.
+    ++write_count;
+
+    // Loop until the end of transmission.
+    while (USART_GetFlagStatus(USART6, USART_FLAG_TC) == RESET);
+  }
+
+  return write_count;
+}
+
+#endif
