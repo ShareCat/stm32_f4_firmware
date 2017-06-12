@@ -5,7 +5,7 @@ STLINK=~/stlink.git
 STM_COMMON = ../..
 
 # Application Sources
-SRCS = main.c event.c leds.c blink.c netconf.c telnet.c shell.c uart.c
+SRCS = main.c event.c leds.c blink.c netconf.c telnet.c shell.c uart.c newlib_stubs.c
 SRCS += stm32f4xx_it.c system_stm32f4xx.c stm32f4x7_eth_bsp.c
 
 # LwIP API Sources
@@ -22,7 +22,8 @@ SRCS += mem.c memp.c pbuf.c netif.c raw.c stats.c sys.c
 SRCS += tcp.c tcp_in.c tcp_out.c timers.c udp.c
 
 # LwIP Port Sources
-SRCS += ethernetif.c sys_arch.c
+SRCS += $(STM_COMMON)/libraries/LWIP-1.4.1/port/STM32F4x7/arch/ethernetif.c 
+SRCS += $(STM_COMMON)/libraries/LWIP-1.4.1/port/STM32F4x7/arch/sys_arch.c
 
 # RTOS Config Sources
 SRCS += RTX_Conf_CM.c
@@ -82,15 +83,15 @@ CFLAGS += -Wl,--no-wchar-size-warning
 ###################################################
 
 vpath %.c \
+$(STM_COMMON)/libraries/RTX-v4.79/SRC \
+$(STM_COMMON)/libraries/STM32F4-Discovery \
+$(STM_COMMON)/libraries/STM32F4xx_StdPeriph_Driver/src \
+$(STM_COMMON)/libraries/STM32F4x7_ETH_Driver/src \
 $(STM_COMMON)/libraries/LWIP-1.4.1/src/api \
 $(STM_COMMON)/libraries/LWIP-1.4.1/src/netif \
 $(STM_COMMON)/libraries/LWIP-1.4.1/src/core \
 $(STM_COMMON)/libraries/LWIP-1.4.1/src/core/ipv4 \
-$(STM_COMMON)/libraries/LWIP-1.4.1/port/STM32F4x7/arch \
-$(STM_COMMON)/libraries/RTX-v4.79/SRC \
-$(STM_COMMON)/libraries/STM32F4-Discovery \
-$(STM_COMMON)/libraries/STM32F4xx_StdPeriph_Driver/src \
-$(STM_COMMON)/libraries/STM32F4x7_ETH_Driver/src
+$(STM_COMMON)/libraries/LWIP-1.4.1/port/STM32F4x7/arch
 
 vpath %.s \
 $(STM_COMMON)/libraries/RTX-v4.79/SRC/GCC
