@@ -3,6 +3,8 @@
 *.d
 *.crf
 *.hex
+*.bin
+*.elf
 *.axf
 *.dep
 *.lnp
@@ -17,4 +19,6 @@
 *.uvgui.*
 *.uvoptx
 *.uvguix.*
+**/build
+
 
